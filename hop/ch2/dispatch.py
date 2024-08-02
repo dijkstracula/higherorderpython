@@ -2,7 +2,7 @@
 
 import re
 
-from . import utils
+from hop import utils
 
 from typing import Any, Callable
 
