@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "hop"
+version = "0.1.0"
+description = ""
+authors = ["Nathan Taylor <ntaylor@cs.utexas.edu>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pytest-cov = "^5.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = ["--cov", "-v"]
