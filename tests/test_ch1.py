@@ -17,3 +17,14 @@ def test_hanoi():
 
 def test_dir_walk():
     ch1.dir_walk(".")
+
+def test_find_share():
+    assert(ch1.find_share(10, []) == None)
+    assert(ch1.find_share(0, [1,2,3]) == [])
+    assert(ch1.find_share(1, [1,2,3]) == [1])
+    assert(ch1.find_share(3, [1,5,3]) == [3])
+    assert(ch1.find_share(4, [1,2,3]) == [1, 3])
+
+def test_partition():
+    assert(ch1.partition([1,7]) == None)
+    assert(ch1.partition([1,2,3]) == ([1,2], [3]))

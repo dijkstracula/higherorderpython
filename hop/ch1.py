@@ -2,7 +2,9 @@
 
 from . import utils
 
-from typing import Callable, TypeVar
+from collections import Counter
+
+from typing import Callable, Optional, TypeVar
 
 T = TypeVar("T")
 
@@ -91,3 +93,32 @@ def dir_walk(path: str,
         return on_file(path)
 
     assert False
+
+# 1.8. When Recursion Blows Up
+
+def find_share(target: int, treasures: list[int]) -> Optional[list[int]]:
+    if target == 0:
+        return []
+    if target < 0 or len(treasures) == 0:
+        return None
+
+    first, rest = treasures[0], treasures[1:]
+    
+    ret = find_share(target-first, rest)
+    if ret is not None:
+        return [first] + ret
+    return find_share(target, rest)
+
+def partition(treasures: list[int]) -> Optional[tuple[list[int], list[int]]]:
+    share_1 = find_share(sum(treasures) // 2, treasures)
+    if share_1 is None:
+        return None
+    share_2 = []
+    
+    s1_counts = Counter(share_1)
+    for t in treasures:
+        if t in s1_counts:
+            s1_counts[t] -= 1
+        else:
+            share_2.append(t)
+    return (share_1, share_2)
