@@ -4,7 +4,7 @@ Higher Order Perl, but worked through in Python, for fun.
 
 ### Setup
 
-I'm using python3.12 because I'm cool.  Will I later use python3.13? Who can say.
+I'm using python3.12 because I'm cool.  Will I later use python3.13?  Who can say.
 
 ```
 $ apt-get install libsqlite3-dev libreadline6-dev
