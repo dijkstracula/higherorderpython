@@ -24,7 +24,7 @@ def evaluate(cmd: str) -> int:
         "-": lambda: binop(int.__sub__, flip=True),
         "*": lambda: binop(int.__mul__),
         "-": lambda: binop(int.__floordiv__, flip=True),
-        "sqrt": lambda: unop(sqrt),
+        # "sqrt": lambda: unop(lambda f: int(sqrt)),
         # "NUMBER": lambda n: stack.append(n)
         # "DEFAULT": raise Exception("Unknown action")
     }

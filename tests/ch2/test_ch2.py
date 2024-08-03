@@ -20,6 +20,6 @@ class Testcalc(unittest.TestCase):
         self.assertEqual(to_ast("42"), 42)
         self.assertEqual(to_ast("1 2 +"), ('+', 1, 2))
 
-    def test_to_ast(self):
+    def test_to_string(self):
         self.assertEqual(ast_to_string(to_ast("42")), "42")
         self.assertEqual(ast_to_string(to_ast("1 2 +")), "(1 + 2)")

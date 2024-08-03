@@ -2,8 +2,6 @@
 
 import re
 
-from hop import utils
-
 from typing import Any, Callable
 
 
@@ -53,7 +51,7 @@ def read_config(fn: str):
             if len(tokens) == 2:
                 (directive, rest) = tokens
             else:
-                (directive, rest) = tokens[0], None
+                (directive, rest) = tokens[0], ""
 
             if directive not in dispatch_table:
                 raise Exception(f"Unknown directive {directive} on line {lineno} of {fn}")
@@ -62,7 +60,7 @@ def read_config(fn: str):
 
 dispatch_user_globals: dict[str, Any] = {"read_config": read_config}
 
-dispatch_table: Callable[[str], None] = {
+dispatch_table: dict[str, Callable[[str], None]] = {
     "CHDIR": change_dir,
     "LOGFILE": open_log_file,
     "DEFINE": define_config_directive,
