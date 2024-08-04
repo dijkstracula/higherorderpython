@@ -1,7 +1,5 @@
 # Chapter 1: Recursion and Callbacks
 
-from . import utils
-
 from collections import Counter
 
 from typing import Callable, Optional, TypeVar
