@@ -59,3 +59,29 @@ class TestPermute(unittest.TestCase):
             if p == None:
                 break
             res.append(p)
+
+import hop.ch4.genes as gene
+
+class TestGenes(unittest.TestCase):
+    def test_no_pat(self):
+        it = gene.make_genes("ABC")
+        self.assertEqual(it(), "ABC")
+        self.assertEqual(it(), None)
+
+    def test_simple_pat(self):
+        it = gene.make_genes("AB(C)")
+        self.assertEqual(it(), "ABC")
+        self.assertEqual(it(), None)
+
+    def test_choice_pat(self):
+        it = gene.make_genes("AB(CD)")
+        self.assertEqual(it(), "ABC")
+        self.assertEqual(it(), "ABD")
+        self.assertEqual(it(), None)
+
+    def test_multi_pats(self):
+        it = gene.make_genes("AB(CD)(EF)")
+        self.assertEqual(it(), "ABCE") # next: 1 0
+        self.assertEqual(it(), "ABDE") # next: 0 1
+        self.assertEqual(it(), "ABCF") # next: 1 1
+        self.assertEqual(it(), "ABDF") # next: None
