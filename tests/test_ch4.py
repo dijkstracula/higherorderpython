@@ -137,3 +137,11 @@ Barry:White:LA:CA:900"""
         # With a per-DB iterator, ca_it() iterated past the TX entry.
         tx_row = tx_it()
         self.assertIsNotNone(tx_row)
+
+from hop.ch4.crawler import traverse
+
+def test_traverse():
+    it = traverse("https://www.cs.utexas.edu/~ntaylor/")
+    print(it())
+    print(it())
+    print(it())
