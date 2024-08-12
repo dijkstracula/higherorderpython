@@ -71,3 +71,18 @@ class TestTailCalls(unittest.TestCase):
         for n in range(32):
             self.assertEqual(binary(n), binary_acc(n))
 
+    def test_fib(self):
+        for i in range(10):
+            self.assertEqual(fib(i), fib_v2(i))
+            self.assertEqual(fib_v2(i), fib_v3(i))
+
+
+import pytest
+
+@pytest.mark.benchmark(group="fib-iter")
+def test_fib_recursive(benchmark):
+    benchmark(fib_v2, 22)
+
+@pytest.mark.benchmark(group="fib-iter")
+def test_fib_iterative(benchmark):
+    benchmark(fib_v3, 22)

@@ -1,8 +1,8 @@
 from hop.ch4.iterator import Iterator
 
-from dataclasses import dataclass
-
-from typing import Generic, Optional, TypeVar
+from dataclasses import astuple, dataclass
+from enum import Enum
+from typing import Generic, Literal, Optional, TypeVar
 
 T = TypeVar("T")
 
@@ -66,3 +66,81 @@ def binary_acc(n: int, acc="") -> str:
     if n <= 1:
         return acc
     return binary_acc(n//2, acc)
+
+def fib(n: int) -> int:
+    if n <= 1:
+        return n
+    return fib(n-2) + fib(n-1)
+
+def fib_v2(n: int) -> int:
+    if n <= 1:
+        return n
+
+    # IP: compute_f_2
+    f2 = fib(n-2)
+    
+    # IP: compute_f_1
+    f1 = fib(n-1)
+
+    # IP: sum_and_ret
+    return f2 + f1
+
+InstPtr = Enum("InstPtr", ["check_base_case", "compute_f_2", "compute_f_1", "sum_and_ret"])
+
+@dataclass
+class Frame:
+    n: int
+    ip: InstPtr = InstPtr.check_base_case
+    f2: Optional[int] = None
+    f1: Optional[int] = None
+
+def fib_v3(n: int) -> int:
+    stack: list[Frame] = [Frame(n)]
+    retval = -1
+
+    def inc_rip():
+        match stack[-1].ip:
+            case InstPtr.check_base_case:
+                stack[-1].ip = InstPtr.compute_f_2
+            case InstPtr.compute_f_2:
+                stack[-1].ip = InstPtr.compute_f_1
+            case InstPtr.compute_f_1:
+                stack[-1].ip = InstPtr.sum_and_ret
+            case InstPtr.sum_and_ret:
+                raise Exception(f"Can't increment RIP after sum_and_ret: state: {stack[-1]}")
+
+    def call(n):
+        inc_rip()
+        stack.append(Frame(n))
+
+    def ret(n):
+        nonlocal retval
+        stack.pop()
+        retval = n
+
+    while len(stack) > 0:
+        f = stack[-1]
+        match f:
+            case Frame(n, InstPtr.check_base_case, None, None) if n <= 1:
+                ret(n)
+            case Frame(n, InstPtr.check_base_case, None, None):
+                inc_rip()
+            
+            case Frame(n, InstPtr.compute_f_2, None, None):
+                call(n-2)
+
+            # Having returned from f(n-2)
+            case Frame(n, InstPtr.compute_f_1, None, None):
+                f.f2 = retval
+                call(n-1)
+
+            # Having returned from f(n-1)
+            case Frame(n, InstPtr.sum_and_ret, f2, None) if f2 is not None:
+                f.f1 = retval
+                ret(f2 + f.f1)
+
+            case n, rip, f2, f1:
+                raise Exception(f"{n} {rip} {f2} {f1}")
+
+    return retval
+

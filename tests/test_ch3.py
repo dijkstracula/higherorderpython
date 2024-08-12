@@ -42,36 +42,36 @@ class TestFib(unittest.TestCase):
 
 import pytest
 
-@pytest.mark.benchmark(group="fib")
+@pytest.mark.benchmark(group="fib-memo")
 def test_fib_naive(benchmark):
     benchmark(fib, 22)
 
-@pytest.mark.benchmark(group="fib")
+@pytest.mark.benchmark(group="fib-memo")
 def test_fib_cached(benchmark):
     f = fib_cached()
     benchmark(f, 22)
 
-@pytest.mark.benchmark(group="fib")
+@pytest.mark.benchmark(group="fib-memo")
 def test_fib_memoized(benchmark):
     f = memoize(fib)
     benchmark(f, 22)
 
-@pytest.mark.benchmark(group="fib")
+@pytest.mark.benchmark(group="fib-memo")
 def test_fib_keygen_noop(benchmark):
     f = memoize_keygen(fib)
     benchmark(f, 22)
 
-@pytest.mark.benchmark(group="fib")
+@pytest.mark.benchmark(group="fib-memo")
 def test_fib_keygen(benchmark):
     f = memoize_keygen(fib, lambda x: int(str(x)))
     benchmark(f, 22)
 
-@pytest.mark.benchmark(group="fib")
+@pytest.mark.benchmark(group="fib-memo")
 def test_fib_keygen_inlined(benchmark):
     f = memoize_keygen_inline(fib, "int(str(t))")
     benchmark(f, 22)
 
-@pytest.mark.benchmark(group="fib")
+@pytest.mark.benchmark(group="fib-memo")
 def test_fib_keygen_inlined_noop(benchmark):
     f = memoize_keygen_inline(fib)
     benchmark(f, 22)
