@@ -129,18 +129,63 @@ def fib_v3(n: int) -> int:
             case Frame(n, InstPtr.compute_f_2, None, None):
                 call(n-2)
 
-            # Having returned from f(n-2)
             case Frame(n, InstPtr.compute_f_1, None, None):
                 f.f2 = retval
+            case Frame(n, InstPtr.compute_f_1, f2, None) if f2 is not None:
                 call(n-1)
 
-            # Having returned from f(n-1)
             case Frame(n, InstPtr.sum_and_ret, f2, None) if f2 is not None:
                 f.f1 = retval
-                ret(f2 + f.f1)
+            case Frame(n, InstPtr.sum_and_ret, f2, f1) if f2 is not None and f1 is not None:
+                ret(f2 + f1)
 
             case n, rip, f2, f1:
                 raise Exception(f"{n} {rip} {f2} {f1}")
+
+    return retval
+
+
+@dataclass
+class FrameOpto:
+    n: int
+    ip: int = 1
+    f2: int = 42
+    f1: int = 42
+
+def fib_v3_opto(n: int) -> int:
+    stack: list[FrameOpto] = [FrameOpto(n)]
+    retval = -1
+
+    def inc_rip():
+        stack[-1].ip += 1
+
+    def call(n):
+        inc_rip()
+        stack.append(FrameOpto(n))
+
+    def ret(n):
+        nonlocal retval
+        stack.pop()
+        retval = n
+
+    while len(stack) > 0:
+        f = stack[-1]
+
+        if f.ip == 1:
+            if f.n <= 1:
+                ret(f.n)
+            else:
+                inc_rip()
+        elif f.ip == 2:
+            call(f.n-2)
+        elif f.ip == 3:
+            f.f2 = retval
+            call(f.n-1)
+        elif f.ip == 4:
+            f.f1 = retval
+            ret(f.f2 + f.f1)
+        else:
+            raise Exception(f)
 
     return retval
 
