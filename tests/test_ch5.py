@@ -16,8 +16,9 @@ def test_make_partitioner():
     assert(it() == None)
 
     it = make_partitioner(3, [1,2,3])
-    assert(set(it()) == set([1,2]))
-    assert(set(it()) == set([3]))
+    # shut up, pyright
+    assert(set(it() or []) == set([1,2]))
+    assert(set(it() or []) == set([3]))
     assert(it() == None)
 
 from hop.ch5.intpart import *

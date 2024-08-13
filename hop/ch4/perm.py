@@ -30,7 +30,10 @@ def permute(items: list[T]) -> Iterator[list[T]]:
         nonlocal n
         pat = n_to_pat(n, len(items))
         n += 1
-        return pattern_to_permutation(pat, items)
-
+        ret = pattern_to_permutation(pat, items)
+        if ret != items:
+            # we've not yet looped back around (the book doesn'
+            # have a termination condition like this?)
+            return ret
     return doit
 

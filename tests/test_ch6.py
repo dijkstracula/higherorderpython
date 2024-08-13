@@ -26,16 +26,18 @@ class TestNode(unittest.TestCase):
         self.assertIsInstance(l1, Node)
         self.assertEqual(head(l1), 1)
 
-        l1 = tail(l1)
+        l1 = tail(l1); assert l1
         self.assertIsInstance(l1, Node)
         self.assertEqual(head(l1), 2)
 
-        l1 = tail(l1)
+        l1 = tail(l1); assert l1
         self.assertIsInstance(l1, Node)
         self.assertEqual(head(l1), 3)
 
     def test_up_to(self):
-        l = upto(3,5)
+        l = upto(3,5); assert l
         self.assertEqual(head(l), 3)
-        self.assertEqual(head(tail(l)), 4)
-        self.assertEqual(head(tail(tail(l))), 5)
+        l = tail(l); assert l
+        self.assertEqual(head(l), 4)
+        l = tail(l); assert l
+        self.assertEqual(l, 5)

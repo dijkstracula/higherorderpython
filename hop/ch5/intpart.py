@@ -47,8 +47,9 @@ def make_partition(n: int) -> Iterator[list[int]]:
     def doit():
         while len(stack) > 0:
             item = stack.pop()
-            n, i, ret = stack.n, stack.i, stack.subpart
-            raise Exception("Argh")
+            match item:
+                case WorkItem(n, i, subpart):
+                    raise Exception("Argh")
 
 
     return doit

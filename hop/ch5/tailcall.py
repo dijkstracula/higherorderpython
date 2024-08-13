@@ -23,8 +23,7 @@ class BinTreeNode(Generic[T]):
     right: Optional["BinTreeNode[T]"]
 
 def flatten_tree(tree: Optional[BinTreeNode[T]]) -> list[T]:
-    if tree is None:
-        return []
+    if tree is None: return []
     ret = []
     ret.extend(flatten_tree(tree.left))
     ret.append(tree.elem)
@@ -40,20 +39,29 @@ def flatten_tree_v2(tree: Optional[BinTreeNode[T]]) -> list[T]:
         curr = curr.right
     return ret
 
-def flatten_tree_v3(tree: BinTreeNode[T]) -> list[T]:
+type BinTree[T] = None | BinTreeNode[T]
+
+@dataclass
+class FlattenFrame(Generic[T]):
+    tree: BinTree[T]
+    visited_left: bool = False
+
+def flatten_tree_v3(tree: BinTree[T]) -> list[T]:
     ret: list[T] = []
-    stack: list[tuple[BinTreeNode[T], bool]] = [(tree, False)]
+    stack: list[FlattenFrame] = [FlattenFrame(tree)]
 
     while len(stack) > 0:
-        (curr, visited_left) = stack.pop()
-        if not visited_left and curr.left is not None:
-            stack.append((curr, True))
-            stack.append((curr.left, False))
-        else:
-            ret.append(curr.elem)
-            if curr.right is not None:
-                stack.append((curr.right, False))
-             
+        curr = stack[-1]
+        match curr:
+            case FlattenFrame(None, _):
+                stack.pop() # return
+            case FlattenFrame(BinTreeNode(l, _, _), False):
+                curr.visited_left = True
+                stack.append(FlattenFrame(l))
+            case FlattenFrame(BinTreeNode(_, e, r), True):
+                ret.append(e)
+                stack.pop()
+                stack.append(FlattenFrame(r))
     return ret
 
 def binary(n: int) -> str:
