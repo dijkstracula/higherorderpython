@@ -123,9 +123,23 @@ class TestHamming(unittest.TestCase):
         self.assertEqual(take(hs, 10), [1,2,3,4,5,6,8,9,10,12])
 
     def test_hamming(self):
-        hs = hamming()
-        self.assertEqual(take(hs, 10), [1,2,3,4,5,6,8,9,10,12])
+        self.assertEqual(take(hamming(), 10), [1,2,3,4,5,6,8,9,10,12])
+        self.assertEqual(take(hamming(), 3000)[-1], 278942752080)
 
 @pytest.mark.benchmark(group="hamming")
-def test_hamming(benchmark):
+def test_first_3000_hammings(benchmark):
     benchmark(lambda: take(hamming(), 3000))
+
+from hop.ch6.regex import *
+
+class TestRegexGen(unittest.TestCase):
+    def test_literal(self):
+        l = literal("foo")
+        self.assertEqual(head(l), "foo")
+        self.assertIsNone(tail(l))
+
+    def test_mingle(self):
+        l1 = upto(1,3)
+        l2 = upto(11,13)
+        l = mingle2(l1, l2)
+        self.assertEqual(take(l, 60), [1, 11, 2, 12, 3, 13])
