@@ -7,7 +7,7 @@ class TestNode(unittest.TestCase):
     def test_head_tail(self):
         l = Node(1, Node(3, Node(2, None)))
         self.assertEqual(head(l), 1)
-        self.assertEqual(head(tail(l)), 3)
+        self.assertEqual(head(force(tail(l))), 3)
 
     def test_insert_after(self):
         l1 = Node(1, Node(2, None))
@@ -134,7 +134,7 @@ from hop.ch6.regex import *
 
 class TestRegexGen(unittest.TestCase):
     def test_literal(self):
-        l = literal("foo")
+        l = force(literal("foo"))
         self.assertEqual(head(l), "foo")
         self.assertIsNone(tail(l))
 
@@ -143,3 +143,57 @@ class TestRegexGen(unittest.TestCase):
         l2 = upto(11,13)
         l = mingle2(l1, l2)
         self.assertEqual(take(l, 60), [1, 11, 2, 12, 3, 13])
+
+    def test_union(self):
+        l1 = upto(1,3)
+        l2 = upto(11,13)
+        l3 = upto(101,103)
+        l = union(l1, l2, l3)
+        self.assertEqual(take(l, 60), 
+                         [1, 11, 101, 2, 12, 102, 3, 13, 103])
+
+    def test_concat(self):
+        l = force(concat(literal("a"), literal("b")))
+        self.assertEqual(head(l), "ab")
+        l = tail(l)
+        self.assertIsNone(l)
+
+        l = concat(union(literal("a"), literal("b")),
+                   union(literal("c"), literal("d")))
+        self.assertEqual(take(l, 4), ["ac", "bc", "ad", "bd"])
+
+    def test_star(self):
+        l = star(literal("a"))
+        self.assertEqual(take(l, 4), ["", "a", "aa", "aaa"])
+
+        l = plus(literal("a"))
+        self.assertEqual(take(l, 4), ["a", "aa", "aaa", "aaaa"])
+
+        l = concat(literal("a"),
+                   star(literal("b")))
+        self.assertEqual(take(l, 4), ["a", "ab", "abb", "abbb"])
+
+        l = star(union(literal("aa"),
+                       literal("b")))
+        self.assertEqual(take(l, 5), ["", "aa", "aaaa", "b", "aab"])
+
+    def test_charclass(self):
+        l = charclass("abc")
+        self.assertEqual(take(l, 12), ["a", "b", "c"])
+
+    def test_index_of_shortest(self):
+        self.assertEqual(index_of_shortest(), None)
+        self.assertEqual(index_of_shortest(None, None), None)
+
+        ls = [literal("aaa"),
+              literal("bb"),
+              literal("c"),
+              None,
+              literal("dddd")]
+        self.assertEqual(index_of_shortest(*ls), 2)
+
+    def test_union_v2(self):
+        l = star(union_v2(literal("aa"),
+                          literal("b")))
+        self.assertEqual(take(l, 6), 
+                         ["", "b", "bb", "aa", "baa", "bbb"])

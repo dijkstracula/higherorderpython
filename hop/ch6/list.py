@@ -3,7 +3,8 @@ from hop.utils import Comparable
 from dataclasses import dataclass
 from typing import Callable, Generic, Optional, TypeVar
 
-T,U = TypeVar("T", bound=Comparable), TypeVar("U", bound=Comparable)
+T,U = TypeVar("T"), TypeVar("U")
+CT = TypeVar("CT", bound=Comparable)
 
 type List[T] = Optional[Node[T]]
 
@@ -76,7 +77,7 @@ def iterate_function(f: Callable[[T], T], x: T) -> List[T]:
 
 # 
 
-def merge(l1: List[T], l2: List[T]) -> List[T]:
+def merge(l1: List[CT], l2: List[CT]) -> List[CT]:
     match l1,l2:
         case l1, None: return l1
         case None, l2: return l2
