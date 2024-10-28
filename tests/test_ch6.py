@@ -130,7 +130,7 @@ class TestHamming(unittest.TestCase):
 def test_first_3000_hammings(benchmark):
     benchmark(lambda: take(hamming(), 3000))
 
-from hop.ch6.regex import *
+from hop.ch6.regexgen import *
 
 class TestRegexGen(unittest.TestCase):
     def test_literal(self):
@@ -197,3 +197,19 @@ class TestRegexGen(unittest.TestCase):
                           literal("b")))
         self.assertEqual(take(l, 6), 
                          ["", "b", "bb", "aa", "baa", "bbb"])
+
+from hop.ch6.regex import *
+
+class TestRegexMatch(unittest.TestCase):
+    def test_simple_matches(self):
+        self.assertTrue(matches("aaa", 
+                                star(literal("a"))))
+        self.assertFalse(matches("aba", 
+                                 star(literal("a"))))
+
+    def test_bal(self):
+        b = bal(charclass("ab"))
+        self.assertEqual(take(b, 10),
+                         ['', 'a', 'aa', '()', 
+                          'a()', 'aaa', 'b', 'aa()', 
+                          '()a', '(a)'])

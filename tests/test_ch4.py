@@ -145,3 +145,8 @@ def test_traverse():
     print(it())
     print(it())
     print(it())
+
+
+def test_rich_iterator():
+    it = iter(RichIterator(upto(3, 5)))
+    assert list(it) == [3,4,5]

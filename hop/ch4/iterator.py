@@ -73,3 +73,19 @@ def append(*args: Iterator[T]) -> Iterator[T]:
                 return t
             i += 1
     return doit
+
+from typing import Generic
+
+class RichIterator(Generic[T]): 
+    inner: Iterator[T]
+
+    def __init__(self, it: Iterator[T]):
+        self.inner = it
+
+    def __iter__(self): return self
+
+    def __next__(self):
+        ret = self.inner()
+        if ret is None: raise StopIteration
+        return ret
+
